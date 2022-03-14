@@ -1,0 +1,13 @@
+#1: On Jenkins server to copy contents of latest build to ansible or any desired machine
+
+rsync -avh /var/lib/jenkins/workspace/devops-pipeline/dockerfile root@172.31.8.2:/opt/sourcecode/
+
+#2: On Ansible server to create a new image for every build
+
+cd /opt/sourcecode
+docker image build  -t $JOB_NAME:v1.$BUILD_ID .
+docker image tag $JOB_NAME:v1.$BUILD_ID dockerforbeginer/$JOB_NAME:v1.$BUILD_ID
+docker image tag $JOB_NAME:v1.$BUILD_ID dockerforbeginer/$JOB_NAME:latest
+docker image push dockerforbeginer/$JOB_NAME:v1.$BUILD_ID
+docker image push dockerforbeginer/$JOB_NAME:latest
+docker rmi $JOB_NAME:v1.$BUILD_ID dockerforbeginer/$JOB_NAME:v1.$BUILD_ID dockerforbeginer/$JOB_NAME:latest
