@@ -11,3 +11,37 @@ docker image tag $JOB_NAME:v1.$BUILD_ID dockerforbeginer/$JOB_NAME:latest
 docker image push dockerforbeginer/$JOB_NAME:v1.$BUILD_ID
 docker image push dockerforbeginer/$JOB_NAME:latest
 docker rmi $JOB_NAME:v1.$BUILD_ID dockerforbeginer/$JOB_NAME:v1.$BUILD_ID dockerforbeginer/$JOB_NAME:latest
+
+
+
+#3 Valid docker file
+FROM python:3.7-alpine
+FROM centos:latest
+RUN cd /etc/yum.repos.d/
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+RUN yum install -y httpd \
+  zip \ 
+  unzip
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page276/ocean-vibes.zip /var/www/html/
+WORKDIR /var/www/html/
+RUN unzip ocean-vibes.zip
+RUN cp -rvf templatemo_554_ocean_vibes/* .
+RUN rm -rf ocean-vibes.zip  templatemo_554_ocean_vibes
+CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
+EXPOSE 80
+
+
+#4 Valid Playbook
+
+- hosts: all
+  tasks:
+  - name: stop container
+    shell: docker container stop practice-devops || true && docker container rm practice-devops || true
+      #  - name: remove container
+      #shell: docker rm container  practice-devops
+  - name: remove image
+    shell: docker image rm dockerforbeginer/devops-pipeline || true
+  - name: create container
+    shell: docker container run -itd --name practice-devops -p 9000:80 dockerforbeginer/devops-pipeline:latest
+
