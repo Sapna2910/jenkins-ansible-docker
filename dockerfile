@@ -4,7 +4,7 @@ ADD https://www.free-css.com/assets/files/free-css-templates/download/page276/oc
 WORKDIR /var/www/html/
 RUN unzip ocean-vibes.zip
 RUN cp -rvf templatemo_554_ocean_vibes/* .
-RUM rm -rf ocean-vibes.zip  templatemo_554_ocean_vibes
+RUN rm -rf ocean-vibes.zip  templatemo_554_ocean_vibes
 CMD["usr/sbin/httpd", "-D", "FOREGROUND"]
 EXPOSE 80
 
