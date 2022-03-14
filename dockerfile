@@ -1,6 +1,7 @@
 FROM centos:latest
 ADD http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-3.el8.noarch.rpm .
 RUN rpm -i 'centos-gpg-keys-8-3.el8.noarch.rpm'
+RUN dnf distro-sync
 RUN yum install -y httpd \
   zip \ 
   unzip
